@@ -36,10 +36,8 @@ document.getElementById('uploadForm').addEventListener('submit', async function(
         // Cria novo workbook mantendo coluna A original e domínios limpos na B
         const newWorkbook = XLSX.utils.book_new();
         
-        const dados_formatados = [
-            ['Page ascore', 'Domínios Limpos'], // Cabeçalho
-            ...dominios.map(d => [d.colunaA, d.limpo]) // Dados com coluna A original e domínio limpo na B
-        ];
+        // Remove o cabeçalho adicional e usa direto os dados
+        const dados_formatados = dominios.map(d => [d.colunaA, d.limpo]);
         
         const newSheet = XLSX.utils.aoa_to_sheet(dados_formatados);
         XLSX.utils.book_append_sheet(newWorkbook, newSheet, 'Dominios');
