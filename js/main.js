@@ -17,7 +17,7 @@ document.getElementById('uploadForm').addEventListener('submit', async function(
         const sheet = workbook.Sheets[workbook.SheetNames[0]];
         const dados = XLSX.utils.sheet_to_json(sheet, { header: 'A' });
         
-        // Alterado para pegar os valores das colunas A e C
+        // Alterado para pegar os valores das colunas A e C e filtrar apenas .com.br
         const dominios = dados
             .map(row => ({
                 colunaA: row.A, // Mantém o valor original da coluna A
@@ -29,6 +29,8 @@ document.getElementById('uploadForm').addEventListener('submit', async function(
                 colunaA: item.colunaA,
                 limpo: item.limpo.toLowerCase()
             }))
+            // Adiciona filtro para .com.br
+            .filter(item => item.limpo.endsWith('.com.br'))
             .filter((item, index, self) => 
                 self.findIndex(t => t.limpo === item.limpo) === index
             );
