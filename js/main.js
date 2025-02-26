@@ -17,27 +17,28 @@ document.getElementById('uploadForm').addEventListener('submit', async function(
         const sheet = workbook.Sheets[workbook.SheetNames[0]];
         const dados = XLSX.utils.sheet_to_json(sheet, { header: 'A' });
         
-        // Alterado para pegar os valores da coluna C ao invés da B
+        // Alterado para pegar os valores das colunas A e C
         const dominios = dados
             .map(row => ({
-                original: row.C, // Mantém o valor original
-                limpo: limparDominio(row.C) // Valor limpo
+                colunaA: row.A, // Mantém o valor original da coluna A
+                original: row.C, // URL original da coluna C
+                limpo: limparDominio(row.C) // Valor limpo da coluna C
             }))
             .filter(item => item.original && typeof item.original === 'string')
             .map(item => ({
-                original: item.original,
+                colunaA: item.colunaA,
                 limpo: item.limpo.toLowerCase()
             }))
             .filter((item, index, self) => 
                 self.findIndex(t => t.limpo === item.limpo) === index
             );
 
-        // Cria novo workbook com os domínios originais e limpos
+        // Cria novo workbook mantendo coluna A original e domínios limpos na B
         const newWorkbook = XLSX.utils.book_new();
         
         const dados_formatados = [
-            ['URL Original', 'Domínios Limpos'], // Cabeçalho
-            ...dominios.map(d => [d.original, d.limpo]) // Dados com URL original na A e domínio limpo na B
+            ['Page ascore', 'Domínios Limpos'], // Cabeçalho
+            ...dominios.map(d => [d.colunaA, d.limpo]) // Dados com coluna A original e domínio limpo na B
         ];
         
         const newSheet = XLSX.utils.aoa_to_sheet(dados_formatados);
