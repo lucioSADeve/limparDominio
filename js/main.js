@@ -33,18 +33,25 @@ document.getElementById('fileInput').addEventListener('change', async function(e
             );
 
         // Cria novo workbook mantendo coluna A original e domínios limpos na B
-        const newWorkbook = XLSX.utils.book_new();
-        
-        // Remove o cabeçalho adicional e usa direto os dados
         const dados_formatados = dominios.map(d => [d.colunaA, d.limpo]);
         
-        const newSheet = XLSX.utils.aoa_to_sheet(dados_formatados);
-        XLSX.utils.book_append_sheet(newWorkbook, newSheet, 'Dominios');
+        // Divide os dados em chunks de 200 linhas
+        const chunkSize = 200;
+        const totalPartes = Math.ceil(dados_formatados.length / chunkSize);
 
-        // Gera o arquivo
-        XLSX.writeFile(newWorkbook, 'dominios_limpos.xlsx');
+        for (let i = 0; i < dados_formatados.length; i += chunkSize) {
+            const chunk = dados_formatados.slice(i, i + chunkSize);
+            const chunkNumber = Math.floor(i / chunkSize) + 1;
+            
+            const newWorkbook = XLSX.utils.book_new();
+            const newSheet = XLSX.utils.aoa_to_sheet(chunk);
+            XLSX.utils.book_append_sheet(newWorkbook, newSheet, 'Dominios');
+
+            // Gera o arquivo com número da parte
+            XLSX.writeFile(newWorkbook, `dominios_limpos_parte${chunkNumber}.xlsx`);
+        }
         
-        statusDiv.textContent = 'Arquivo processado com sucesso! Baixando resultado...';
+        statusDiv.textContent = `Arquivo processado com sucesso! Foram gerados ${totalPartes} arquivos com ${chunkSize} linhas cada.`;
     } catch (error) {
         console.error('Erro:', error);
         statusDiv.textContent = 'Erro ao processar arquivo: ' + error.message;

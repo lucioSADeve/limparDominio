@@ -19,18 +19,29 @@
         }
         #status {
             margin: 20px 0;
+            padding: 10px;
+            border-radius: 5px;
         }
-        .button {
-            display: none; /* Esconde o botão pois não será mais necessário */
+        .success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        .error {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        .processing {
+            background-color: #e3f2fd;
+            color: #1565c0;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Limpador de Domínios</h1>
+        <p>Selecione um arquivo Excel para processar. O resultado será dividido em arquivos de 200 linhas.</p>
         <form id="uploadForm">
             <input type="file" id="fileInput" accept=".xlsx" required>
-            <button type="submit" class="button">Processar Arquivo</button>
         </form>
         <div id="status"></div>
     </div>
