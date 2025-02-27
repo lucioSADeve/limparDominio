@@ -1,9 +1,6 @@
-document.getElementById('uploadForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
+document.getElementById('fileInput').addEventListener('change', async function(e) {
     const statusDiv = document.getElementById('status');
-    const fileInput = document.getElementById('fileInput');
-    const file = fileInput.files[0];
+    const file = e.target.files[0];
     
     if (!file) {
         statusDiv.textContent = 'Por favor, selecione um arquivo.';
