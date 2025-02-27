@@ -19,9 +19,9 @@ document.getElementById('fileInput').addEventListener('change', async function(e
             .map(row => ({
                 colunaA: row.A, // Mantém o valor original da coluna A
                 original: row.C, // URL original da coluna C
-                limpo: limparDominio(row.C) // Valor limpo da coluna C
+                limpo: row.C ? limparDominio(row.C) : '' // Verifica se C existe antes de limpar
             }))
-            .filter(item => item.original && typeof item.original === 'string')
+            .filter(item => item.original && typeof item.original === 'string' && item.limpo) // Filtra items vazios
             .map(item => ({
                 colunaA: item.colunaA,
                 limpo: item.limpo.toLowerCase()
@@ -59,6 +59,11 @@ document.getElementById('fileInput').addEventListener('change', async function(e
 });
 
 function limparDominio(url) {
+    // Verifica se a URL é válida
+    if (!url || typeof url !== 'string') {
+        return '';
+    }
+    
     // Remove https:// ou http://
     let dominio = url.replace(/^https?:\/\//, '');
     
