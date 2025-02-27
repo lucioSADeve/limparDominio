@@ -7,6 +7,9 @@ document.getElementById('fileInput').addEventListener('change', async function(e
         return;
     }
 
+    // Pega o nome do arquivo sem a extensão
+    const nomeArquivo = file.name.replace(/\.[^/.]+$/, '');
+
     statusDiv.textContent = 'Processando arquivo...';
     
     try {
@@ -47,8 +50,8 @@ document.getElementById('fileInput').addEventListener('change', async function(e
             const newSheet = XLSX.utils.aoa_to_sheet(chunk);
             XLSX.utils.book_append_sheet(newWorkbook, newSheet, 'Dominios');
 
-            // Gera o arquivo com número da parte
-            XLSX.writeFile(newWorkbook, `dominios_limpos_parte${chunkNumber}.xlsx`);
+            // Gera o arquivo usando o nome original + número da parte
+            XLSX.writeFile(newWorkbook, `${nomeArquivo}${chunkNumber}.xlsx`);
         }
         
         statusDiv.textContent = `Arquivo processado com sucesso! Foram gerados ${totalPartes} arquivos com ${chunkSize} linhas cada.`;
